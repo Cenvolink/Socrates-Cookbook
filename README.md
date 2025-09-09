@@ -1,6 +1,6 @@
 # Socrates API Documentation
 
-Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决多步骤问题而设计的尖端大型语言模型。本指南将引导您了解 Socrates 的核心功能，并通过详尽的 API 参考和代码示例，帮助您将其集成到您的应用程序中。
+Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决多步骤问题而设计的大型语言模型。本指南将引导您了解 Socrates 的核心功能，并通过详尽的 API 参考和代码示例，帮助您将其集成到您的应用程序中。
 
 ## Introduction
 
@@ -46,7 +46,192 @@ Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决�
 | `meta_instructions` | object | Optional | （仅限 `socrates-pro` 和 `socrates-mini`）一个定义 Agent 核心行为准则、目标和约束的结构化对象。请参阅下文的[高级指南：构建代理](#advanced-guide-building-agents-with-meta-instructions)。 |
 | `knowledge_context` | object | Optional | 一个用于注入临时知识的对象，模型会以极高的优先级参考此信息。请参阅[高级指南：推理时持续学习](#advanced-guide-in-context-continual-learning)。|
 
+### Audio
+
+#### Speech-to-Text (ASR)
+
+**`POST https://api.cotix-ai.dev/v1/audio/transcriptions`**
+
+将音频转录为文本。
+
+| PARAMETER | TYPE | REQUIRED | DESCRIPTION |
+| :--- | :--- | :--- | :--- |
+| `model` | string | Required | 要使用的 ASR 模型 ID。当前可用：`socrates-nano`。 |
+| `file` | file | Required | 音频文件对象 (非文件名)，支持 `flac`, `mp3`, `mp4`, `mpeg`, `mpga`, `m4a`, `ogg`, `wav`, 或 `webm`。 |
+| `language` | string | Optional | 音频的语言（ISO-639-1 格式）。如果未指定，模型将自动检测语言。 |
+| `prompt` | string | Optional | 提供一个提示，以引导模型的风格或纠正特定词汇的拼写。 |
+| `response_format` | string | Optional | 转录输出的格式，可选 `json`, `text`, `srt`, `verbose_json`, 或 `vtt`。默认为 `json`。 |
+
+#### Text-to-Speech (TTS)
+
+**`POST https://api.cotix-ai.dev/v1/audio/speech`**
+
+将文本转换为自然的语音。
+
+| PARAMETER | TYPE | REQUIRED | DESCRIPTION |
+| :--- | :--- | :--- | :--- |
+| `model` | string | Required | 要使用的 TTS 模型 ID。当前可用：`socrates-nano`。 |
+| `input` | string | Required | 要转换为语音的文本字符串，最大长度为 4096 个字符。 |
+| `voice` | string | Required | 用于生成音频的声音。可用声音包括 `alloy`, `echo`, `fable`, `onyx`, `nova`, 和 `shimmer`。 |
+| `response_format` | string | Optional | 音频的格式。支持 `mp3`, `opus`, `aac`, 和 `flac`。默认为 `mp3`。 |
+| `speed` | number | Optional | 生成语音的速度。范围从 0.25 到 4.0。1.0 是正常速度。 |
+
+### Embeddings
+
+**`POST https://api.cotix-ai.dev/v1/embeddings`**
+
+获取给定输入的向量表示，可用于衡量文本字符串之间的相关性。
+
+| PARAMETER | TYPE | REQUIRED | DESCRIPTION |
+| :--- | :--- | :--- | :--- |
+| `model` | string | Required | 要使用的 Embedding 模型 ID。推荐使用 `socrates-nano`。 |
+| `input` | string or array | Required | 要进行嵌入的输入文本，编码为字符串或字符串数组。 |
+| `encoding_format`| string | Optional | 返回嵌入的格式。可以是 `float` 或 `base64`。默认为 `float`。 |
+
 ---
+
+## Guides
+
+### Vision: Multimodality
+
+所有 Socrates 模型都具备视觉能力，可以理解图像并回答相关问题。
+
+#### How to use images
+
+在 `messages` 数组中，您可以使用一种特定的格式来传递图像。`content` 字段应为一个数组，其中包含文本和多个图像块。
+
+支持的图像格式：PNG, JPEG, GIF, WEBP。
+图像限制：每个图像最大 20MB。
+
+#### Example: Describing an image
+
+```python
+import base64
+import requests
+
+# Function to encode the image
+def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
+
+image_path = "path_to_your_image.jpg"
+base64_image = encode_image(image_path)
+
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {api_key}"
+}
+
+payload = {
+    "model": "socrates-mini",
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "What’s in this image? Describe it in detail."
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{base64_image}"
+                    }
+                }
+            ]
+        }
+    ],
+    "max_tokens": 300
+}
+
+response = requests.post("https://api.cotix-ai.dev/v1/chat/completions", headers=headers, json=payload)
+print(response.json()['choices'][0]['message']['content'])
+```
+
+### Real-time Voice Conversations
+
+通过结合 ASR（语音转文本）、Chat Completions (`stream=true`) 和 TTS（文本转语音）API，您可以构建低延迟的实时语音对话代理。
+
+#### Architecture Overview
+
+1.  **Capture Audio**: 从用户的麦克风捕获音频流。
+2.  **Transcribe (ASR)**: 将音频流实时发送到我们的 ASR 端点。
+3.  **Think (Chat)**: 将转录的文本以流式模式发送到 Chat Completions API。
+4.  **Speak (TTS)**: 当您从 Chat API 接收到文本流时，立即将其分块（例如，按句子）并发送到 TTS API。
+5.  **Playback**: 播放从 TTS API 返回的音频流。
+
+这种流水线作业（Pipelining）是实现低延迟对话的关键，因为它允许模型在思考的同时开始说话。`socrates-nano` 因其极快的响应速度而特别适合此应用场景。
+
+### Code Generation
+
+Socrates 模型，特别是 `socrates-mini` 和 `socrates-pro`，在代码理解和生成方面表现出色。只需在提示中明确您的需求即可。
+
+#### Best Practices for Code Generation
+
+*   **Be Specific**: 提供尽可能多的细节，包括编程语言、库、函数签名和期望的行为。
+*   **Provide Context**: 如果是修改现有代码，请提供相关的代码片段。
+*   **Iterate**: 将复杂的编码任务分解为更小的步骤。先让模型生成一个基本框架，然后逐步要求它添加功能或进行重构。
+
+#### Example: Writing a Python function
+
+```python
+response = client.chat.completions.create(
+    model="socrates-mini",
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a helpful coding assistant who writes clean, efficient Python code."
+        },
+        {
+            "role": "user",
+            "content": "Write a Python function that takes a URL, downloads its HTML content, and returns all the links (<a> tags) found in it. Use the requests and BeautifulSoup libraries. Add error handling for network issues or invalid URLs."
+        }
+    ],
+    temperature=0.2
+)
+
+print(response.choices[0].message.content)
+```
+
+### Embeddings for RAG and Search
+
+Embeddings 对于构建检索增强生成 (RAG)、语义搜索、聚类和推荐系统至关重要。
+
+#### How Embeddings Work
+
+1.  **Generate**: 使用 `v1/embeddings` 端点将您的文档（或文档块）转换为向量。
+2.  **Store**: 将这些向量及其对应的文本存储在向量数据库中（例如 Pinecone, Weaviate, Chroma）。
+3.  **Query**: 当用户提问时，将用户的问题也转换为一个向量。
+4.  **Retrieve**: 在向量数据库中执行相似性搜索，找出与问题向量最接近的文档向量。
+5.  **Augment**: 将检索到的文档内容作为上下文，连同用户的问题一起，提交给 Chat Completions API 以生成最终答案。
+
+#### Example: Creating an embedding
+
+```python
+response = client.embeddings.create(
+    model="text-embedding-ada-002",
+    input="The quick brown fox jumps over the lazy dog"
+)
+
+# The embedding is a list of floats
+embedding_vector = response.data[0].embedding
+print(f"Vector dimensions: {len(embedding_vector)}")
+print(f"First 5 dimensions: {embedding_vector[:5]}")
+```
+
+### Rate Limits
+
+为了确保平台的稳定性和公平使用，我们对 API 请求实施了速率限制。限制是根据您的账户等级和组织来设置的。
+
+您可以通过检查 API 响应头来了解当前的速率限制状态：
+
+*   `x-ratelimit-limit-requests`: 您在当前时间窗口内允许的总请求数。
+*   `x-ratelimit-remaining-requests`: 当前时间窗口内剩余的请求数。
+*   `x-ratelimit-reset-requests`: 当前请求数限制重置的剩余时间。
+*   （同样适用于 `tokens`，例如 `x-ratelimit-limit-tokens`）
+
+如果超出速率限制，您将收到一个 `429 Too Many Requests` 的 HTTP 状态码。我们建议在您的代码中实现带有指数退避的重试逻辑来处理这种情况。
+
 
 ## Guides
 
