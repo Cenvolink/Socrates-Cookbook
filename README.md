@@ -376,7 +376,7 @@ print(f"Justification: {confidence_data.justification}")
 
 ### Asynchronous Deep Thought (Socrates-pro)
 
-对于需要数小时进行深度分析、创造性规划或解决复杂问题的任务，`socrates-pro` 提供了异步深度思考模式。这允许您提交一个任务，并在模型完成其详尽的内部推理过程后获取结果。
+对于需要数小时进行深度分析、创造性规划或解决复杂问题的任务，`socrates-pro` 提供了基于 MCTS 的异步深度思考模式。这允许您提交一个任务，并在模型完成其详尽的内部推理过程后获取结果。
 
 #### API Endpoints
 
