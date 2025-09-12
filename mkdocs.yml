@@ -1,0 +1,95 @@
+# ---------------------
+# Project Information
+# ---------------------
+site_name: Socrates Cookbook
+site_url: https://cotix-ai.github.io/Socrates-Cookbook/ # 替换成你的 GitHub Pages URL
+site_author: Cotix AI
+site_description: >-
+  探索 Socrates API 的强大功能，构建下一代 AI 应用。获取快速入门指南、API 参考和高级教程。
+
+# ---------------------
+# Repository
+# ---------------------
+repo_name: Cotix-AI/Socrates-Cookbook
+repo_url: https://github.com/Cotix-AI/Socrates-Cookbook
+edit_uri: edit/main/docs/
+
+# ---------------------
+# Copyright
+# ---------------------
+copyright: Copyright &copy; 2025 Cotix AI. All rights reserved.
+
+# ---------------------
+# Navigation (导航菜单)
+# ---------------------
+nav:
+  - 介绍: index.md
+  - 快速入门: README.md
+  - 指南:
+    - 开发者指南: Advanced_Developer_Guides.md
+    - 深入思考指南: Deep_Think.md
+    - 无幻觉指南: Hallucination.md
+
+# ---------------------
+# Theme (主题和外观)
+# ---------------------
+theme:
+  name: material
+  language: zh
+  custom_dir: docs/overrides # 用于自定义样式，可选
+  features:
+    - navigation.tabs # 使用顶部标签导航
+    - navigation.sections # 左侧导航栏分段
+    - navigation.top # 返回顶部按钮
+    - search.suggest # 搜索建议
+    - search.highlight # 搜索词高亮
+    - content.code.copy # 代码块复制按钮
+    - content.code.annotate # 代码注解功能
+  palette: 
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换到暗黑模式
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换到明亮模式
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+# ---------------------
+# Plugins (插件)
+# ---------------------
+plugins:
+  - search:
+      lang:
+        - en
+        - ja # 支持中日韩语言的搜索
+        - ko
+        - zh
+
+# ---------------------
+# Markdown Extensions (增强 Markdown 功能)
+# ---------------------
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition # 美观的提示框，如 note, warning
+  - footnotes
+  - attr_list
+  - md_in_html
+  - pymdownx.details # 可折叠内容块
+  - pymdownx.tabbed: # 选项卡内容
+      alternate_style: true 
