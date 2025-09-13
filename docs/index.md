@@ -1,10 +1,3 @@
----
-template: home.html
-hide:
-  - navigation
-  - toc
----
-
 # 欢迎来到 Socrates AI 文档
 
 **Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决多步骤问题而设计的大型语言模型。无论您是构建简单的聊天机器人还是复杂的多功能自主代理，Socrates 都能提供所需的能力与可靠性。**
