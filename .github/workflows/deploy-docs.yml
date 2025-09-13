@@ -1,0 +1,56 @@
+name: Deploy Documentation to GitHub Pages
+
+# 触发条件：当向 main 分支推送代码时
+on:
+  push:
+    branches:
+      - main
+    # 仅当 docs/ 文件夹或相关配置文件发生变化时才运行
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'requirements.txt'
+
+# 权限设置：允许工作流写入 GitHub Pages 分支
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤 1: 检出仓库代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 步骤 2: 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+
+      # 步骤 3: 安装构建依赖
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 步骤 4: 使用 MkDocs 构建网站
+      - name: Build with MkDocs
+        run: mkdocs build
+
+      # 步骤 5: 配置 GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # 步骤 6: 上传构建产物 (site/ 文件夹)
+      # GitHub Actions 会处理后续的部署
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './site'
+      
+      # 步骤 7: 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
