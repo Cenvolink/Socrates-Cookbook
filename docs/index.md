@@ -18,7 +18,7 @@ Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决�
 
     深入了解我们 API 的每一个端点和参数。获取关于 Chat、Embeddings、Fine-tuning 等的详细信息。
 
-    [查看 API](README.md)
+    [查看 API](guide.md)
 
 - **高级指南**
 
