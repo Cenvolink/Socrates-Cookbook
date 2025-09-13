@@ -24,7 +24,7 @@ copyright: Copyright &copy; 2025 Cotix AI. All rights reserved.
 # ---------------------
 nav:
   - 介绍: index.md
-  - 参考: README.md
+  - 参考: guide.md
   - 快速开始: quickstart.md
   - 高级指南:
     - 开发者指南: Advanced_Developer_Guides.md
