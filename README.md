@@ -3,7 +3,7 @@
 <p align="center">
   欢迎来到 Socrates AI 官方文档的源文件仓库！
   <br>
-  所有发布在 <a href="https://cotix-ai.github.io/Socrates-Cookbook/">socrates.cotix.ai</a> 上的内容都在这里进行维护。
+  所有发布在 <a href="https://cotix-ai.github.io/Socrates-Cookbook/">https://cotix-ai.github.io/Socrates-Cookbook/</a> 上的内容都在这里进行维护。
   <br>
   <br>
   <a href="https://github.com/Cotix-AI/Socrates-Cookbook/actions/workflows/deploy-docs.yml">
