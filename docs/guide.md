@@ -42,6 +42,7 @@ Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决�
 | `confidence_threshold` | number | Optional | 一个介于 0.0 和 1.0 之间的值。如果模型的最终置信度低于此阈值，它将在 `finish_reason` 中返回 `confidence_too_low`，并且可能不会生成完整内容。这是一个安全功能，用于防止低质量或不确定的输出。 |
 | `meta_instructions` | object | Optional | （仅限 `socrates-pro` 和 `socrates-mini`）一个定义 Agent 核心行为准则、目标和约束的结构化对象。请参阅下文的[高级指南：构建代理](#building-agents-with-meta_instructions)。 |
 | `knowledge_context` | object | Optional | 一个用于注入临时知识的对象，模型会以极高的优先级参考此信息。请参阅[高级指南：上下文持续学习](#in-context-continual-learning)。|
+| `url_context` | object | Optional | 允许模型自动提取和理解用户消息中 URL 内容的对象。将其设置为 `{"enabled": true}` 来激活此功能。请参阅[指南：使用 URL 上下文](#using-url-context)获取详细信息。 |
 
 ---
 
@@ -269,6 +270,38 @@ response = requests.post("https://api.cotix-ai.dev/v1/chat/completions", headers
 print(response.json()['choices'][0]['message']['content'])
 ```
 
+### Using URL Context
+
+通过启用 `url_context`，您可以让模型直接从用户提供的 URL 中获取信息。当模型在 `messages` 中检测到 URL 时，它会自动访问该链接，读取其内容（如网页文本、PDF 文档），并利用这些信息来回答问题或执行任务。这极大地简化了需要引用在线文档或文章的用例。
+
+**工作原理:**
+1.  在您的 API 请求中设置 `url_context: {"enabled": true}`。
+2.  在用户的消息中包含一个或多个完整的 URL。
+3.  模型将在后台提取 URL 的内容，并将其作为高优先级上下文来生成回复。
+
+```python
+# 确保已初始化 client
+# client = OpenAI(api_key=..., base_url=...)
+
+response = client.chat.completions.create(
+    model="socrates-mini",
+    messages=[
+        {
+            "role": "user",
+            "content": "Please summarize the main points of this article: https://www.example.com/blog/ai-in-healthcare-2024"
+        }
+    ],
+    url_context={"enabled": true}  # 启用此功能
+)
+
+# 模型将直接返回基于文章内容的摘要
+print(response.choices[0].message.content)
+# Expected output:
+# "The article discusses several key applications of AI in healthcare for 2024. The main points include the use of machine learning for predictive diagnostics, AI-powered drug discovery which significantly speeds up research, and the role of natural language processing in streamlining clinical documentation..."
+```
+
+> **注意**：`url_context` 与 `web_search` 工具不同。`web_search` 用于发现信息，而 `url_context` 用于分析用户已经提供的特定链接。
+
 ### Structured Output (JSON Mode)
 
 通过设置 `response_format={"type": "json_object"}`，您可以强制模型输出一个语法正确的 JSON 对象。这对于需要结构化数据的应用场景至关重要，例如 API 调用、数据提取或前端组件的动态生成。
@@ -475,7 +508,7 @@ print(response.choices[0].message.content)
 
 ## Response Objects
 
-理解 API 返回的结构对于构建健壮的应用程序至关셔重要。以下是主要端点返回的 JSON 对象示例。
+理解 API 返回的结构对于构建健壮的应用程序至关重要。以下是主要端点返回的 JSON 对象示例。
 
 ### Chat Completion Object
 
@@ -730,5 +763,3 @@ main();
 ```
 
 对于其他语言，您可以使用任何支持自定义请求头和基础 URL 的 OpenAI 兼容库，或者直接发送 HTTP 请求。
-
-
