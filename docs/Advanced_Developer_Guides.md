@@ -138,7 +138,7 @@ import os
 # 配置客户端
 client = OpenAI(
     api_key=os.environ.get("SOCRATES_API_KEY"),
-    base_url="https://api.cotix-ai.dev/v1"
+    base_url="https://api.cenvolink.dev/v1"
 )
 
 # 上传您的训练数据文件
