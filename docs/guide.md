@@ -1,4 +1,4 @@
-# Socrates API Documentation
+<img width="1974" height="722" alt="image" src="https://github.com/user-attachments/assets/0406c456-0df4-40bb-b193-1149d7769c01" /><img width="1974" height="722" alt="image" src="https://github.com/user-attachments/assets/ba73166a-9bec-4800-9568-a2cdf7f956ea" /># Socrates API Documentation
 
 Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决多步骤问题而设计的大型语言模型。本指南将引导您了解 Socrates 的核心功能，并通过详尽的 API 参考和代码示例，帮助您将其集成到您的应用程序中。
 
@@ -13,14 +13,14 @@ Socrates 是一系列专为驱动高级 AI 代理、执行复杂推理和解决�
 | MODEL ID | DESCRIPTION | INPUT TOKEN LIMIT | OUTPUT TOKEN LIMIT |
 | :--- | :--- | :--- | :--- |
 | `socrates-pro` | 我们功能最强大、最具创造力的模型。专为处理高度复杂、需要深度领域知识和多步推理的任务而设计。是异步深度思考任务的唯一选择。 | 理论无穷 | 理论无穷 |
-| `socrates-mini` | 在能力和速度之间实现了卓越的平衡。适用于绝大多数企业级应用，包括复杂的客户服务、内容生成和代码辅助。 | 128,000 tokens | 8,192 tokens |
-| `socrates-nano` | 我们最快、成本效益最高的模型。针对高吞吐量和低延迟场景进行了优化，非常适合大规模实时对话、内容分类和摘要等任务。 | 32,768 tokens | 4,096 tokens |
+| `socrates-mini` | 在能力和速度之间实现了卓越的平衡。适用于绝大多数企业级应用，包括复杂的客户服务、内容生成和代码辅助。 | 理论无穷 | 理论无穷 |
+| `socrates-nano` | 我们最快、成本效益最高的模型。针对高吞吐量和低延迟场景进行了优化，非常适合大规模实时对话、内容分类和摘要等任务。 | 理论无穷 | 理论无穷 |
 
 ## API Reference
 
 ### Chat Completions
 
-**`POST https://api.cotix-ai.dev/v1/chat/completions`**
+**`POST https://api.cenvolink.dev/v1/chat/completions`**
 
 创建一个模型回复，以完成给定的对话。
 
@@ -71,7 +71,7 @@ from openai import OpenAI
 # 建议使用环境变量来配置 API 密钥和基础 URL
 client = OpenAI(
     api_key=os.environ.get("SOCRATES_API_KEY", "YOUR_API_KEY"),
-    base_url=os.environ.get("SOCRATES_BASE_URL", "https://api.cotix-ai.dev/v1")
+    base_url=os.environ.get("SOCRATES_BASE_URL", "https://api.cenvolink.dev/v1")
 )
 
 # 步骤 3: 在你的代码中定义并执行函数
@@ -227,7 +227,7 @@ response = client.chat.completions.create(
 # 为简化示例，这里直接展示最终可能生成的文本和数据。
 print(response.choices[0].message.content)
 # Expected output might look like this:
-# "I have created the image you requested. You can view it here: https://cdn.cotix-ai.dev/images/generated_image_uuid.png"
+# "I have created the image you requested. You can view it here: https://cdn.cenvolink.dev/images/generated_image_uuid.png"
 ```
 
 ### Vision: Understanding Images
@@ -266,7 +266,7 @@ payload = {
     "max_tokens": 500
 }
 
-response = requests.post("https://api.cotix-ai.dev/v1/chat/completions", headers=headers, json=payload)
+response = requests.post("https://api.cenvolink.dev/v1/chat/completions", headers=headers, json=payload)
 print(response.json()['choices'][0]['message']['content'])
 ```
 
@@ -358,7 +358,7 @@ payload = {
     "max_thinking_time_seconds": 10800,  # 3 hours
     "webhook_url": "https://yourapi.com/socrates/webhook"
 }
-response = requests.post("https://api.cotix-ai.dev/v1/thought_tasks", headers=headers, data=json.dumps(payload))
+response = requests.post("https://api.cenvolink.dev/v1/thought_tasks", headers=headers, data=json.dumps(payload))
 task_id = response.json()['id']
 print(f"Task created with ID: {task_id}")
 ```
@@ -370,7 +370,7 @@ print(f"Task created with ID: {task_id}")
 import time
 
 while True:
-    res = requests.get(f"https://api.cotix-ai.dev/v1/thought_tasks/{task_id}", headers=headers)
+    res = requests.get(f"https://api.cenvolink.dev/v1/thought_tasks/{task_id}", headers=headers)
     task = res.json()
     if task['status'] == 'completed':
         print("Task completed!")
@@ -642,7 +642,7 @@ import time
 import random
 from openai import OpenAI, RateLimitError
 
-client = OpenAI(api_key="...", base_url="https://api.cotix-ai.dev/v1")
+client = OpenAI(api_key="...", base_url="https://api.cenvolink.dev/v1")
 
 def chat_with_backoff():
     max_retries = 5
@@ -725,7 +725,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.environ.get("SOCRATES_API_KEY"),
-    base_url="https://api.cotix-ai.dev/v1"
+    base_url="https://api.cenvolink.dev/v1"
 )
 
 # ... (使用 client 对象调用 API)
@@ -748,7 +748,7 @@ import OpenAI from 'openai';
 
 const client = new OpenAI({
   apiKey: process.env.SOCRATES_API_KEY,
-  baseURL: 'https://api.cotix-ai.dev/v1',
+  baseURL: 'https://api.cenvolink.dev/v1',
 });
 
 async function main() {
