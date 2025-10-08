@@ -2,22 +2,22 @@
 # Project Information
 # ---------------------
 site_name: Socrates Cookbook
-site_url: https://cotix-ai.github.io/Socrates-Cookbook/ # 替换成你的 GitHub Pages URL
-site_author: Cotix AI
+site_url: hhttps://cenvolink.github.io/Socrates-Cookbook
+site_author: Cenvolink
 site_description: >-
   探索 Socrates API 的强大功能，构建下一代 AI 应用。获取快速入门指南、API 参考和高级教程。
 
 # ---------------------
 # Repository
 # ---------------------
-repo_name: Cotix-AI/Socrates-Cookbook
-repo_url: https://github.com/Cotix-AI/Socrates-Cookbook
+repo_name: Cenvolink/Socrates-Cookbook
+repo_url: https://github.com/Cenvolink/Socrates-Cookbook
 edit_uri: edit/main/docs/
 
 # ---------------------
 # Copyright
 # ---------------------
-copyright: Copyright &copy; 2025 Cotix AI. All rights reserved.
+copyright: Copyright &copy; 2025 Cenvolink. All rights reserved.
 
 # ---------------------
 # Navigation (导航菜单)
@@ -26,7 +26,6 @@ nav:
   - 介绍: index.md
   - 参考: guide.md
   - 快速开始: quickstart.md
-  - AI Box: aibox.md
   - 高级指南:
     - 开发者指南: Advanced_Developer_Guides.md
     - 深入思考指南: Deep_Think.md
