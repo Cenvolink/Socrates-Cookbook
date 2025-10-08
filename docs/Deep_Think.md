@@ -150,7 +150,7 @@ from langchain.schema import SystemMessage, HumanMessage, AIMessage
 
 # 使用 Socrates API
 SOCRATES_API_KEY = os.environ.get("SOCRATES_API_KEY")
-SOCRATES_BASE_URL = "https://api.cotix-ai.dev/v1"
+SOCRATES_BASE_URL = "https://api.cenvolink.dev/v1"
 
 # 评估模型: 负责打分，需要高质量和遵循指令的能力
 llm_evaluator = ChatOpenAI(
