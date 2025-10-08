@@ -55,7 +55,7 @@ from openai import OpenAI
 # SDK 会自动从环境变量读取 SOCRATES_API_KEY
 client = OpenAI(
     api_key=os.environ.get("SOCRATES_API_KEY"),
-    base_url="https://api.cotix-ai.dev/v1"
+    base_url="https://api.cenvolink.dev/v1"
 )
 
 try:
@@ -155,7 +155,7 @@ import json
 import time
 
 SOCRATES_API_KEY = os.environ.get("SOCRATES_API_KEY")
-API_BASE_URL = "https://api.cotix-ai.dev/v1"
+API_BASE_URL = "https://api.cenvolink.dev/v1"
 
 headers = {
     "Authorization": f"Bearer {SOCRATES_API_KEY}",
